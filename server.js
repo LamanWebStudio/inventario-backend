@@ -44,3 +44,38 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+
+
+const nodemailer = require('nodemailer');
+
+app.post('/api/enviar-correo', async (req, res) => {
+    const { nombre, telefono, notas, empleado } = req.body;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'lamanwebstudio@gmail.com',
+            pass: 'fsdq nyhm vpnd wpiv'
+        }
+    });
+
+    const mailOptions = {
+        from: 'Sistema de Inventario',
+        to: 'lamanwebstudio@gmail.com',
+        subject: `📩 Nuevo cliente registrado por ${empleado}`,
+        text: `
+            Nombre del cliente: ${nombre}
+            Teléfono: ${telefono}
+            Notas: ${notas}
+            Registrado por: ${empleado}
+        `
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.json({ message: 'Correo enviado correctamente' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error al enviar el correo' });
+    }
+});
