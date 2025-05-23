@@ -2,12 +2,20 @@ require('dotenv').config(); // Carga las variables de entorno desde el .env
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-
 const app = express();
-const FRONTEND_URL = 'https://inventario-phi.vercel.app';
+const FRONTEND_URLS = [
+  'https://inventario-phi.vercel.app',
+  'https://landig-page-gamma.vercel.app'
+];
 
 app.use(cors({
-  origin: FRONTEND_URL
+  origin: function (origin, callback) {
+    if (!origin || FRONTEND_URLS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('No autorizado por CORS'));
+    }
+  }
 }));
 app.use(express.json());
 
@@ -68,7 +76,7 @@ try {
 // ==============================
 app.post('/api/enviar-correo', async (req, res) => {
   const { nombre, telefono, notas, empleado } = req.body;
-
+  console.log("📨 Llegó solicitud al backend:", req.body);
   if (!transporter) {
     return res.status(500).json({ message: 'Error interno: transportador de correo no configurado' });
   }
