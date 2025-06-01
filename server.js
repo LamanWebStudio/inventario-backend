@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const app = express();
-const FRONTEND_URLS =['https://inventario-phi.vercel.app', "https://rousedevstudio.vercel.app"];
+const FRONTEND_URLS =['https://inventario-phi.vercel.app', "https://roucedevstudio.vercel.app"];
 
 app.use(cors({
   origin: function (origin, callback) {
